@@ -1,15 +1,19 @@
 import React from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import HomePage from './Main/HomePage';
 import LoginForm from './LoginForm/LoginForm';
-import './App.css'; 
+import BookList from './BookList';
 
-const App: React.FC = () => {
+function App() {
     return (
-        <div className="App">
-            <div className="LoginForm-container">
-                <LoginForm />
-            </div>
-        </div>
+        <Routes>
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/login" element={<LoginForm />} />
+            <Route path="/book" element={<BookList />} />
+            <Route path="/" element={<Navigate to="/login" />} />
+            <Route path="*" element={<h1>404</h1>} />
+        </Routes>
     );
-};
+}
 
 export default App;

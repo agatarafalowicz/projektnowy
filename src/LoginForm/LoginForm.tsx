@@ -1,16 +1,20 @@
+// LoginForm.tsx
+import React from 'react';
 import { Button, TextField } from "@mui/material";
 import './LoginForm.css';
 import LoginIcon from '@mui/icons-material/Login';
 import { Formik } from "formik";
 import { useCallback, useMemo } from "react";
 import * as yup from 'yup';
+import { useNavigate } from "react-router-dom";
 
 function LoginForm(){
+    const navigate = useNavigate();
     const onSubmit = useCallback(
         (values: { username: string; password: string }, formik: any) => {
-            console.log(values);
+            navigate('/home');
         },
-        [],
+        [navigate],
     );
 
     const validationSchema = useMemo(
@@ -34,7 +38,7 @@ function LoginForm(){
             validateOnBlur
         >
             {(formik) => (
-                <form onSubmit={formik.handleSubmit}>
+                <form onSubmit={formik.handleSubmit} className="LoginForm-container"> {/* Dodaj klasę LoginForm-container */}
                     <TextField
                         id="username"
                         label="Username"

@@ -1,10 +1,12 @@
-import {AppBar, Box, IconButton, Toolbar, Typography} from '@mui/material';
+import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import {AccountCircle} from "@mui/icons-material";
-import {useNavigate} from "react-router-dom";
+import { AccountCircle } from "@mui/icons-material";
 
-export default function MenuAppBar(){
-    const navigate = useNavigate();
+interface MenuAppBarProps {
+    navigateToBooks: () => void;
+}
+
+export default function MenuAppBar({ navigateToBooks }: MenuAppBarProps) {
     return (
         <AppBar position="static">
             <Toolbar>
@@ -13,25 +15,34 @@ export default function MenuAppBar(){
                     edge="start"
                     color="inherit"
                     aria-label="menu"
-                    sx ={{mr: 2}}
-                    >
+                    sx={{ mr: 2 }}
+                >
                     <MenuIcon />
                 </IconButton>
-                <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     Library
                 </Typography>
                 <Box>
                     <IconButton
                         size="large"
                         color="inherit"
+                        aria-label="books"
+                        sx={{ mr: 2 }}
+                        onClick={navigateToBooks}
+                    >
+                        Books
+                    </IconButton>
+                    <IconButton
+                        size="large"
+                        color="inherit"
                         aria-label="account"
                         aria-controls="menu-appbar"
                         aria-haspopup="true"
-                        onClick={() => navigate('/login')}
-                        sx={{mr:2}}
-                        >
+                        onClick={() => console.log("Navigate to login")}
+                        sx={{ mr: 2 }}
+                    >
                         <AccountCircle />
-                    </IconButton>{' '}
+                    </IconButton>
                 </Box>
             </Toolbar>
         </AppBar>

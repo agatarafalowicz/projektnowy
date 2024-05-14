@@ -11,6 +11,7 @@ function App() {
             <Route path="/login" element={<LoginForm />} />
             <Route path="/book" element={<BookList />} />
             <Route path="/" element={<Navigate to="/login" />} />
+            <Route path="/books" element={<BookList />} />
             <Route path="*" element={<h1>404</h1>} />
         </Routes>
     );

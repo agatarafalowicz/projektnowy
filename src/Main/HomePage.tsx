@@ -1,4 +1,5 @@
-import { Box } from '@mui/material';
+import React from 'react';
+import { Box, Button } from '@mui/material';
 import MenuAppBar from "./MenuAppBar";
 import { useNavigate } from "react-router-dom";
 
@@ -9,9 +10,14 @@ function HomePage() {
         navigate('/books');
     }
 
+    const navigateToLoans = () => {
+        navigate('/loans');
+    }
+
     return (
         <Box sx={{ flexGrow: 1 }}>
-            <MenuAppBar navigateToBooks={navigateToBooks} />
+            <MenuAppBar navigateToBooks={navigateToBooks} navigateToLoans={navigateToLoans} />
+            <h1>Welcome to the library</h1>
         </Box>
     );
 }

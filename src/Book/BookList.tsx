@@ -11,17 +11,17 @@ const BookList = () => {
 
     useEffect(() => {
         const fetchData = async () => {
+            const token = localStorage.getItem('token'); 
+            if (!token) {
+                console.error('Token not found');
+                return;
+            }
+            else{
+                console.log(token)
+            }
+
             const client = new LibraryClient();
-            const response: ClientResponse<BookResponseDto[] | null> = await client.getBooks({
-                bookId: undefined,
-                isbn: undefined,
-                title: undefined,
-                author: undefined,
-                publisher: undefined,
-                yearOfPublication: undefined,
-                availableCopies: undefined,
-                loanId: undefined
-            });
+            const response: ClientResponse<BookResponseDto[] | null> = await client.getBooks();
             if (response.success && response.data) {
                 setBooks(response.data);
                 setTotalPages(Math.ceil(response.data.length / booksPerPage));

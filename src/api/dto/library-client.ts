@@ -45,7 +45,7 @@ export class LibraryClient {
         }
     }
 
-    public async getBooks(data: BookDto,): Promise<ClientResponse<BookResponseDto[] | null>> {
+    public async getBooks(): Promise<ClientResponse<BookResponseDto[] | null>> {
         const token = localStorage.getItem('token'); // Retrieve JWT token from localStorage
 
         if (token) {
@@ -59,7 +59,7 @@ export class LibraryClient {
         }
 
         try {
-            const response: AxiosResponse<BookResponseDto[]> = await this.client.get('/api/books'); // Adjust the endpoint as needed
+            const response: AxiosResponse<BookResponseDto[]> = await this.client.get('/api/book/getAll');
             return {
                 success: true,
                 data: response.data,

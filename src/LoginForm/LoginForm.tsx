@@ -1,25 +1,33 @@
-import React from 'react';
-import { Button, TextField } from "@mui/material";
+import { Button, TextField } from '@mui/material';
 import './LoginForm.css';
 import LoginIcon from '@mui/icons-material/Login';
-import { Formik } from "formik";
-import { useCallback, useMemo } from "react";
+import { Formik } from 'formik';
+import { useCallback, useMemo } from 'react';
 import * as yup from 'yup';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import {useApi} from "../api/dto/ApiProvider";
 
-function LoginForm(){
+function LoginForm() {
     const navigate = useNavigate();
+    const apiClient = useApi();
+
     const onSubmit = useCallback(
-        (values: { username: string; password: string }, formik: any) => {
-            navigate('/home');
+        (values: { login: string; password: string }, formik: any) => {
+            apiClient.login(values).then((response) => {
+                if (response.success) {
+                    navigate('/home');
+                } else {
+                    formik.setFieldError('login', 'Invalid login or password');
+                }
+            });
         },
-        [navigate],
+        [apiClient, navigate],
     );
 
     const validationSchema = useMemo(
         () =>
             yup.object().shape({
-                username: yup.string().required('Required'),
+                login: yup.string().required('Required'),
                 password: yup
                     .string()
                     .required('Required')
@@ -30,23 +38,28 @@ function LoginForm(){
 
     return (
         <Formik
-            initialValues={{ username: '', password: '' }}
+            initialValues={{ login: '', password: '' }}
             onSubmit={onSubmit}
             validationSchema={validationSchema}
             validateOnChange
             validateOnBlur
         >
-            {(formik) => (
-                <form onSubmit={formik.handleSubmit} className="LoginForm-container"> {/* Dodaj klasę LoginForm-container */}
+            {(formik: any) => (
+                <form
+                    className="Login-form"
+                    id="singForm"
+                    onSubmit={formik.handleSubmit}
+                    noValidate
+                >
                     <TextField
-                        id="username"
-                        label="Username"
+                        id="login"
+                        label="Login"
                         variant="standard"
-                        name="username"
+                        name="login"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        error={formik.touched.username && !!formik.errors.username}
-                        helperText={formik.touched.username && formik.errors.username}
+                        error={formik.touched.login && !!formik.errors.login}
+                        helperText={formik.touched.login && formik.errors.login}
                     />
                     <TextField
                         id="password"
@@ -63,7 +76,7 @@ function LoginForm(){
                         variant="contained"
                         startIcon={<LoginIcon />}
                         type="submit"
-                        form="signForm"
+                        form="singForm"
                         disabled={!(formik.isValid && formik.dirty)}
                     >
                         Sign in

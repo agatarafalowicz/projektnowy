@@ -1,31 +1,41 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './BookList.css';
-
-const books = [
-    { title: 'Book 1', author: 'Author 1', isbn: '1234567890', publisher: 'Publisher 1', year: 2020, copies: 5 },
-    { title: 'Book 2', author: 'Author 2', isbn: '0987654321', publisher: 'Publisher 2', year: 2018, copies: 3 },
-    { title: 'Book 3', author: 'Author 1', isbn: '1234567890', publisher: 'Publisher 1', year: 2020, copies: 5 },
-    { title: 'Book 4', author: 'Author 2', isbn: '0987654321', publisher: 'Publisher 2', year: 2018, copies: 3 },
-    { title: 'Book 5', author: 'Author 1', isbn: '1234567890', publisher: 'Publisher 1', year: 2020, copies: 5 },
-    { title: 'Book 6', author: 'Author 2', isbn: '0987654321', publisher: 'Publisher 2', year: 2018, copies: 3 },
-    { title: 'Book 7', author: 'Author 1', isbn: '1234567890', publisher: 'Publisher 1', year: 2020, copies: 5 },
-    { title: 'Book 8', author: 'Author 2', isbn: '0987654321', publisher: 'Publisher 2', year: 2018, copies: 3 },
-    { title: 'Book 9', author: 'Author 1', isbn: '1234567890', publisher: 'Publisher 1', year: 2020, copies: 5 },
-    { title: 'Book 10', author: 'Author 2', isbn: '0987654321', publisher: 'Publisher 2', year: 2018, copies: 3 },
-    { title: 'Book 11', author: 'Author 1', isbn: '1234567890', publisher: 'Publisher 1', year: 2020, copies: 5 },
-    { title: 'Book 12', author: 'Author 2', isbn: '0987654321', publisher: 'Publisher 2', year: 2018, copies: 3 },
-    { title: 'Book 13', author: 'Author 1', isbn: '1234567890', publisher: 'Publisher 1', year: 2020, copies: 5 },
-    { title: 'Book 14', author: 'Author 2', isbn: '0987654321', publisher: 'Publisher 2', year: 2018, copies: 3 },
-];
+import { LibraryClient, ClientResponse } from "../api/dto/library-client";
+import { BookResponseDto } from "../api/dto/book.dto";
 
 const BookList = () => {
     const [currentPage, setCurrentPage] = useState(1);
+    const [books, setBooks] = useState<BookResponseDto[]>([]);
+    const [totalPages, setTotalPages] = useState(0);
     const booksPerPage = 10;
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const client = new LibraryClient();
+            const response: ClientResponse<BookResponseDto[] | null> = await client.getBooks({
+                bookId: undefined,
+                isbn: undefined,
+                title: undefined,
+                author: undefined,
+                publisher: undefined,
+                yearOfPublication: undefined,
+                availableCopies: undefined,
+                loanId: undefined
+            });
+            if (response.success && response.data) {
+                setBooks(response.data);
+                setTotalPages(Math.ceil(response.data.length / booksPerPage));
+            } else {
+                console.error('Failed to fetch books:', response.statusCode);
+            }
+        };
+
+        fetchData();
+    }, []);
+
     const indexOfLastBook = currentPage * booksPerPage;
     const indexOfFirstBook = indexOfLastBook - booksPerPage;
     const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
-
-    const totalPages = Math.ceil(books.length / booksPerPage);
 
     const handleNextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -55,8 +65,8 @@ const BookList = () => {
                         <td>{book.author}</td>
                         <td>{book.isbn}</td>
                         <td>{book.publisher}</td>
-                        <td>{book.year}</td>
-                        <td>{book.copies}</td>
+                        <td>{book.yearOfPublication}</td>
+                        <td>{book.availableCopies}</td>
                     </tr>
                 ))}
                 </tbody>

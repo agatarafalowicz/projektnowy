@@ -2,6 +2,8 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import HomePage from "./Main/HomePage";
 import LoginForm from "./LoginForm/LoginForm";
 import ApiProvider from "./api/dto/ApiProvider";
+import BookList from "./Book/BookList";
+import LoanedList from "./Loan/LoanedList";
 
 function App() {
     return (
@@ -35,6 +37,8 @@ function App() {
                         />
                     </Route>
                     <Route path="/login" element={<LoginForm />} />
+                    <Route path="/books" element={<BookList />} />
+                    <Route path="/loans" element={<LoanedList />} />
                     <Route path="/" element={<Navigate to="/login" />} />
                     <Route path="*" element={<h1>404</h1>} />
                 </Routes>

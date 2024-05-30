@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import {LoginDto, LoginResponseDto} from "./login.dto";
+import {BookDto, BookResponseDto} from "./book.dto";
 
 export type ClientResponse<T> = {
     success: boolean;
@@ -44,10 +45,21 @@ export class LibraryClient {
         }
     }
 
-    public async getBooks(): Promise<ClientResponse<any | null>> {
-        try {
-            const response = await this.client.get('/books');
+    public async getBooks(data: BookDto,): Promise<ClientResponse<BookResponseDto[] | null>> {
+        const token = localStorage.getItem('token'); // Retrieve JWT token from localStorage
 
+        if (token) {
+            this.client.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        } else {
+            return {
+                success: false,
+                data: null,
+                statusCode: 401, // Unauthorized if no token found
+            };
+        }
+
+        try {
+            const response: AxiosResponse<BookResponseDto[]> = await this.client.get('/api/books'); // Adjust the endpoint as needed
             return {
                 success: true,
                 data: response.data,

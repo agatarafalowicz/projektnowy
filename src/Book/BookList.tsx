@@ -11,15 +11,6 @@ const BookList = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const token = localStorage.getItem('token'); 
-            if (!token) {
-                console.error('Token not found');
-                return;
-            }
-            else{
-                console.log(token)
-            }
-
             const client = new LibraryClient();
             const response: ClientResponse<BookResponseDto[] | null> = await client.getBooks();
             if (response.success && response.data) {

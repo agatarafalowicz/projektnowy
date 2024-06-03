@@ -1,21 +1,32 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './LoanedList.css';
-
-const loanedBooks = [
-    { userId: '1', bookId: '1', title: 'Book 1', loanDate: '2024-05-10', dueDate: '2024-05-20', returnDate: null },
-    { userId: '2', bookId: '3', title: 'Book 3', loanDate: '2024-05-12', dueDate: '2024-05-22', returnDate: '2024-05-19' },
-    { userId: '1', bookId: '2', title: 'Book 2', loanDate: '2024-05-15', dueDate: '2024-05-25', returnDate: null },
-    { userId: '3', bookId: '4', title: 'Book 4', loanDate: '2024-05-18', dueDate: '2024-05-28', returnDate: null },
-];
+import {ClientResponse, LibraryClient} from "../api/dto/library-client";
+import {LoanResponseDto} from "../api/dto/loan.dto";
 
 const LoanedList = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const booksPerPage = 10;
-    const indexOfLastBook = currentPage * booksPerPage;
-    const indexOfFirstBook = indexOfLastBook - booksPerPage;
-    const currentBooks = loanedBooks.slice(indexOfFirstBook, indexOfLastBook);
+    const [loans, setLoans] = useState<LoanResponseDto[]>([]);
+    const [totalPages, setTotalPages] = useState(1);
+    const loansPerPage = 10;
 
-    const totalPages = Math.ceil(loanedBooks.length / booksPerPage);
+    useEffect(() => {
+        const fetchData = async () => {
+            const client = new LibraryClient();
+            const response: ClientResponse<LoanResponseDto[] | null> = await client.getLoans();
+            if (response.success && response.data) {
+                setLoans(response.data);
+                setTotalPages(Math.ceil(response.data.length / loansPerPage));
+            } else {
+                console.error('Failed to fetch loans:', response.statusCode);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const indexOfLastLoan = currentPage * loansPerPage;
+    const indexOfFirstLoan = indexOfLastLoan - loansPerPage;
+    const currentLoans = loans.slice(indexOfFirstLoan, indexOfLastLoan);
 
     const handleNextPage = () => {
         setCurrentPage(currentPage + 1);
@@ -26,27 +37,23 @@ const LoanedList = () => {
     };
 
     return (
-        <div className="book-list-container">
-            <table className="book-list-table">
+        <div className="loan-list-container">
+            <table className="loan-list-table">
                 <thead>
                 <tr>
-                    <th>User ID</th>
-                    <th>Book ID</th>
-                    <th>Title</th>
-                    <th>Loan Date</th>
-                    <th>Due Date</th>
-                    <th>Return Date</th>
+                    <th>Loan ID</th>
+                    <th>Loan date</th>
+                    <th>Due date</th>
+                    <th>Return date</th>
                 </tr>
                 </thead>
                 <tbody>
-                {currentBooks.map((book, index) => (
+                {currentLoans.map((loan, index) => (
                     <tr key={index}>
-                        <td>{book.userId}</td>
-                        <td>{book.bookId}</td>
-                        <td>{book.title}</td>
-                        <td>{book.loanDate}</td>
-                        <td>{book.dueDate}</td>
-                        <td>{book.returnDate ? book.returnDate : 'Not returned'}</td>
+                        <td>{loan.loanId}</td>
+                        <td>{loan.loanDate}</td>
+                        <td>{loan.dueDate}</td>
+                        <td>{loan.returnDate}</td>
                     </tr>
                 ))}
                 </tbody>

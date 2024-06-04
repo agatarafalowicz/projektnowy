@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './LoanedList.css';
-import {ClientResponse, LibraryClient} from "../api/dto/library-client";
-import {LoanResponseDto} from "../api/dto/loan.dto";
+import { ClientResponse, LibraryClient } from "../api/dto/library-client";
+import { LoanResponseDto } from "../api/dto/loan.dto";
 
 const LoanedList = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -16,6 +16,7 @@ const LoanedList = () => {
             if (response.success && response.data) {
                 setLoans(response.data);
                 setTotalPages(Math.ceil(response.data.length / loansPerPage));
+                console.log('Fetched loans:', response.data); // Log the fetched loans
             } else {
                 console.error('Failed to fetch loans:', response.statusCode);
             }
@@ -42,20 +43,25 @@ const LoanedList = () => {
                 <thead>
                 <tr>
                     <th>Loan ID</th>
+                    <th>User ID</th>
                     <th>Loan date</th>
                     <th>Due date</th>
                     <th>Return date</th>
                 </tr>
                 </thead>
                 <tbody>
-                {currentLoans.map((loan, index) => (
-                    <tr key={index}>
-                        <td>{loan.loanId}</td>
-                        <td>{loan.loanDate}</td>
-                        <td>{loan.dueDate}</td>
-                        <td>{loan.returnDate}</td>
-                    </tr>
-                ))}
+                {currentLoans.map((loan, index) => {
+                    console.log('Rendering loan:', loan); // Log each loan before rendering
+                    return (
+                        <tr key={index}>
+                            <td>{loan.loanId}</td>
+                            <td>{loan.userId?.userId}</td> {/* Display only userId */}
+                            <td>{loan.loanDate}</td>
+                            <td>{loan.dueDate}</td>
+                            <td>{loan.returnDate}</td>
+                        </tr>
+                    );
+                })}
                 </tbody>
             </table>
             <div className="pagination">

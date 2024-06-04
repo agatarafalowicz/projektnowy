@@ -3,6 +3,7 @@ import { LoginDto, LoginResponseDto } from "./login.dto";
 import { BookResponseDto } from "./book.dto";
 import Cookies from "universal-cookie";
 import {LoanResponseDto} from "./loan.dto";
+import {UserResponseDto} from "./user.dto";
 
 const cookies = new Cookies();
 
@@ -122,4 +123,27 @@ export class LibraryClient {
             };
         }
     }
+    public async getUserById(userId: string): Promise<UserResponseDto | null> {
+        const token = cookies.get('token');
+        if (!token) {
+            console.error('No token found, user might not be authenticated');
+            return null;
+        }
+        try {
+            const response: AxiosResponse<UserResponseDto> = await this.client.get(
+                `/api/user/${userId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Error while fetching user:', error);
+            const axiosError = error as AxiosError<Error>;
+            return null;
+        }
+    }
+
 }

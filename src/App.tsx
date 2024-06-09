@@ -4,6 +4,9 @@ import LoginForm from "./LoginForm/LoginForm";
 import ApiProvider from "./api/dto/ApiProvider";
 import BookList from "./Book/BookList";
 import LoanedList from "./Loan/LoanedList";
+import AddBook from "./Book/AddBook";
+import AddLoan from './Loan/AddLoan';
+import AddUser from './User/AddUser';
 
 function App() {
     return (
@@ -39,6 +42,9 @@ function App() {
                     <Route path="/login" element={<LoginForm />} />
                     <Route path="/books" element={<BookList />} />
                     <Route path="/loans" element={<LoanedList />} />
+                    <Route path="/add-book" element={<AddBook/>} />
+                    <Route path="/add-loan" element={<AddLoan />} />
+                    <Route path="/add-user" element={<AddUser />} />
                     <Route path="/" element={<Navigate to="/login" />} />
                     <Route path="*" element={<h1>404</h1>} />
                 </Routes>

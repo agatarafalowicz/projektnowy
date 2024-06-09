@@ -16,7 +16,7 @@ const LoanedList = () => {
             if (response.success && response.data) {
                 setLoans(response.data);
                 setTotalPages(Math.ceil(response.data.length / loansPerPage));
-                console.log('Fetched loans:', response.data); // Log the fetched loans
+                console.log('Fetched loans:', response.data);
             } else {
                 console.error('Failed to fetch loans:', response.statusCode);
             }
@@ -43,7 +43,7 @@ const LoanedList = () => {
                 <thead>
                 <tr>
                     <th>Loan ID</th>
-                    <th>User ID</th>
+                    <th>Book ID</th>
                     <th>Loan date</th>
                     <th>Due date</th>
                     <th>Return date</th>
@@ -51,11 +51,11 @@ const LoanedList = () => {
                 </thead>
                 <tbody>
                 {currentLoans.map((loan, index) => {
-                    console.log('Rendering loan:', loan); // Log each loan before rendering
+                    console.log('Rendering loan:', loan.user?.userId);
                     return (
                         <tr key={index}>
                             <td>{loan.loanId}</td>
-                            <td>{loan.userId?.userId}</td> {/* Display only userId */}
+                            <td>{loan.bookId}</td>
                             <td>{loan.loanDate}</td>
                             <td>{loan.dueDate}</td>
                             <td>{loan.returnDate}</td>

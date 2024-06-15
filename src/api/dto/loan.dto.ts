@@ -1,6 +1,6 @@
 export class LoanResponseDto {
     loanId: number | undefined;
-    user: {
+    userId: {
         userId: number | undefined;
         login: string | undefined;
         userPassword: string | undefined;
@@ -11,5 +11,7 @@ export class LoanResponseDto {
     loanDate: string | undefined;
     dueDate: string | undefined;
     returnDate: string | undefined;
-    bookId: number | undefined;
+    bookId: {
+        bookId: number | undefined;
+    } | undefined;
 }

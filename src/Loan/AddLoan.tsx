@@ -109,7 +109,7 @@ const AddLoan = () => {
                         <Calendar
                             onChange={(value) => setDueDate(value as Date)}
                             value={dueDate}
-                            minDate={new Date()} // Ustawia minimalną datę na dzisiaj
+                            minDate={new Date()}
                             locale="en-US"
                             className="react-calendar"
                         />

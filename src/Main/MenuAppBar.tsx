@@ -34,7 +34,7 @@ export default function MenuAppBar({ navigateToBooks, navigateToLoans }: MenuApp
         console.log('User is logging out');
         const logoutSuccessful = await libraryClient.logout();
         if (logoutSuccessful) {
-            navigate('/login'); // Przekierowanie użytkownika do strony logowania po wylogowaniu
+            navigate('/login');
         } else {
             console.log('Logout cancelled');
         }

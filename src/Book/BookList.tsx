@@ -15,6 +15,7 @@ const BookList = () => {
             const response: ClientResponse<BookResponseDto[] | null> = await client.getBooks();
             if (response.success && response.data) {
                 setBooks(response.data);
+                console.log(response.data);
                 setTotalPages(Math.ceil(response.data.length / booksPerPage));
             } else {
                 console.error('Failed to fetch books:', response.statusCode);

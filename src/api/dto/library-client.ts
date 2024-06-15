@@ -329,5 +329,41 @@ export class LibraryClient {
         }
     }
 
+    public async returnBook(bookId: number, userId: number): Promise<ClientResponse<boolean>> {
+        const token = cookies.get('token');
+        if (!token) {
+            console.error('No token found, user might not be authenticated');
+            return {
+                success: false,
+                data: false,
+                statusCode: 401,
+            };
+        }
+
+        try {
+            const response: AxiosResponse<boolean> = await this.client.put(`/api/loan/return/${bookId}?userId=${userId}`, {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            return {
+                success: true,
+                data: response.data,
+                statusCode: response.status,
+            };
+        } catch (error) {
+            console.error('Error while returning book:', error);
+            const axiosError = error as AxiosError<Error>;
+            return {
+                success: false,
+                data: false,
+                statusCode: axiosError.response?.status || 0,
+            };
+        }
+    }
+
+
+
 
 }

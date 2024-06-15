@@ -3,11 +3,13 @@ import { Box, Button } from '@mui/material';
 import MenuAppBar from "./MenuAppBar";
 import { useNavigate } from "react-router-dom";
 import { LibraryClient } from "../api/dto/library-client";
-import { UserResponseDto } from "../api/dto/user.dto";
+
 
 function HomePage() {
     const navigate = useNavigate();
     const [userRole, setUserRole] = useState<string | undefined>();
+    const [bookId, setBookId] = useState<number | undefined>();
+    const [userId, setUserId] = useState<number | undefined>(); // Dodane pole ID użytkownika
 
     useEffect(() => {
         const libraryClient = new LibraryClient();
@@ -43,6 +45,18 @@ function HomePage() {
 
     const navigateToAddUser = () => {
         navigate(`/add-user`);
+    }
+
+    const handleReturnBook = async () => {
+        if (bookId && userId) {
+            const libraryClient = new LibraryClient();
+            const response = await libraryClient.returnBook(bookId, userId);
+            if (response.success) {
+                console.log('Book returned successfully');
+            } else {
+                console.error('Failed to return book:', response);
+            }
+        }
     }
 
     return (
